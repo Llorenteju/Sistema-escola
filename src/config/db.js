@@ -1,5 +1,6 @@
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 const conexao = mysql.createPool({
@@ -10,26 +11,27 @@ const conexao = mysql.createPool({
     database: process.env.DB_NAME,
 
     waitForConnections: true,
-    connectLimit: 10,
+    connectionLimit: 10,
     queueLimit: 0,
     timezone: "Z"
-
 });
+
+
 (async () => {
     try {
         const connection = await conexao.getConnection();
 
-        console.log("Conectado com o banco de dados")
+        console.log("Conectado com o banco de dados");
 
-        const rows = await connection.query("SELECT 1 AS teste");
+        const [rows] = await connection.query("SELECT 1 AS teste");
 
         console.log("Teste banco:", rows);
+
         connection.release();
     } catch (error) {
-        console.log("Erro ao conectar no banco:")
+        console.log("Erro ao conectar no banco:");
         console.log(error);
     }
-}
-)
+})();
 
 export default conexao;
